@@ -3,6 +3,8 @@ extends Control
 const UM_DIA_UNIX = 86400 ## 60 * 60 * 24 = 86400
 const UMA_SEMANA_UNIX = UM_DIA_UNIX * 7
 
+
+
 @export_enum("Ano", "Mes", "Semana", "Dia", "Numero da Semana", "Nome da Semana") var tipo_de_celula # 0, 1, 2, 3
 
 var A = 0.5 # alpha / opacidade
@@ -15,8 +17,8 @@ var mes:int ## 0 = Janeiro,[br]1 = Fevereiro[br]...[br]11 = Dezembro
 var dia_da_semana:int ## 0 = Domingo,[br]1 = Segunda,[br]...[br]6 = Sábado
 var numero_da_semana:int
 
-
 @onready var COR_MES = Global.COR_MES
+@onready var NOME_MESES = Global.NOME_MESES
 
 func _ready():#
 	pass
@@ -25,11 +27,17 @@ func _alterar_aparencia():
 	$Label.text = str(dia)
 	if tipo_de_celula == 4:
 		$Label.text = "S" + str(numero_da_semana)
+	elif tipo_de_celula == 1:
+		$Label.text = "\n".join(str(NOME_MESES[mes]).split(""))
+	elif tipo_de_celula == 0:
+		$Label.text = __string_ano_formatado(ano)
 	$ColorRect.color = COR_MES[mes % 12]
 
-func alterar_para_a_data(nova_data_unix):
-	data_dicionario = Time.get_datetime_dict_from_unix_time(nova_data_unix)
-	data_unix = nova_data_unix
+func alterar_para_a_data(nova_data):
+	if nova_data is String: #YYYY-MM-DD HH:MM:SS
+		nova_data = Time.get_unix_time_from_datetime_string(nova_data)
+	data_unix = nova_data
+	data_dicionario = Time.get_datetime_dict_from_unix_time(data_unix)
 	dia_da_semana = data_dicionario['weekday']
 	dia = data_dicionario["day"]
 	mes = data_dicionario["month"]-1
@@ -81,6 +89,12 @@ func qtd_semanas_no_mes(_ano=ano,_mes=mes):
 	return num_de_semanas_no_mes
 
 
+func __string_ano_formatado(ano:int):
+	var esp = "\n\n\n\n\n" + "\n\n\n\n\n" + "\n\n\n\n\n" + "\n\n\n\n\n"
+	var espacamento = esp + esp + esp + esp + esp
+	var string_ano = "\n\n\n\n".join(str(ano).split(""))
+	return string_ano + espacamento + string_ano + espacamento + string_ano
+
 func _on_button_pressed() -> void:
-	print("tipo: ",tipo_de_celula, " dia:", dia)
+	print("tipo: ",tipo_de_celula, " data:", dia, "/", mes, "/", ano)
 	

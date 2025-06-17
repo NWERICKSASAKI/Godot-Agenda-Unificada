@@ -19,3 +19,5 @@ const COR_MES = [
 					Color(0,1,0,A), # 10 Nov
 					Color(0,0,1,A)  # 11 Dez
 				]
+
+const NOME_MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]

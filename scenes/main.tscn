@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://bk654t346cfyx"]
+[gd_scene load_steps=6 format=3 uid="uid://bk654t346cfyx"]
 
 [ext_resource type="Theme" uid="uid://dd52ve08fu2y1" path="res://resources/main.tres" id="1_sugp2"]
 [ext_resource type="Script" uid="uid://d3qkpes85iudu" path="res://scripts/calendario.gd" id="2_jyhfs"]
-[ext_resource type="PackedScene" uid="uid://bhi68rsa4l488" path="res://scenes/m.tscn" id="3_jyhfs"]
 [ext_resource type="PackedScene" uid="uid://cak08r8q7glon" path="res://scenes/d.tscn" id="3_tbgi4"]
 [ext_resource type="PackedScene" uid="uid://c0swm8rlv52bx" path="res://scenes/propriedade_celula.tscn" id="5_tbgi4"]
 
@@ -307,76 +306,17 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("1_sugp2")
 
-[node name="-1" type="ColorRect" parent="UI/Calendario/HBoxContainer/Anos/HBoxContainer"]
-custom_minimum_size = Vector2(0, 500)
+[node name="-1" parent="UI/Calendario/HBoxContainer/Anos/HBoxContainer" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-color = Color(0.707957, 0.292772, 0.458163, 1)
+tipo_de_celula = 0
 
-[node name="Label" type="RichTextLabel" parent="UI/Calendario/HBoxContainer/Anos/HBoxContainer/-1"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "2
-0
-2
-4
-?"
-fit_content = true
-autowrap_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 3
-justification_flags = 131
-
-[node name="0" type="ColorRect" parent="UI/Calendario/HBoxContainer/Anos/HBoxContainer"]
-custom_minimum_size = Vector2(0, 500)
+[node name="0" parent="UI/Calendario/HBoxContainer/Anos/HBoxContainer" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-color = Color(0.707957, 0.292772, 0.458163, 1)
+tipo_de_celula = 0
 
-[node name="Label" type="RichTextLabel" parent="UI/Calendario/HBoxContainer/Anos/HBoxContainer/0"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "2
-0
-2
-4
-?"
-autowrap_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="+1" type="ColorRect" parent="UI/Calendario/HBoxContainer/Anos/HBoxContainer"]
-custom_minimum_size = Vector2(0, 500)
+[node name="+1" parent="UI/Calendario/HBoxContainer/Anos/HBoxContainer" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-color = Color(0.707957, 0.292772, 0.458163, 1)
-
-[node name="Label" type="RichTextLabel" parent="UI/Calendario/HBoxContainer/Anos/HBoxContainer/+1"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "2
-0
-2
-4
-?"
-autowrap_mode = 2
-horizontal_alignment = 1
-vertical_alignment = 1
+tipo_de_celula = 0
 
 [node name="Meses" type="ScrollContainer" parent="UI/Calendario/HBoxContainer"]
 custom_minimum_size = Vector2(50, 0)
@@ -391,14 +331,17 @@ size_flags_horizontal = 6
 size_flags_vertical = 3
 theme = ExtResource("1_sugp2")
 
-[node name="-1" parent="UI/Calendario/HBoxContainer/Meses/HBoxContainer" instance=ExtResource("3_jyhfs")]
+[node name="-1" parent="UI/Calendario/HBoxContainer/Meses/HBoxContainer" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
+tipo_de_celula = 1
 
-[node name="0" parent="UI/Calendario/HBoxContainer/Meses/HBoxContainer" instance=ExtResource("3_jyhfs")]
+[node name="0" parent="UI/Calendario/HBoxContainer/Meses/HBoxContainer" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
+tipo_de_celula = 1
 
-[node name="+1" parent="UI/Calendario/HBoxContainer/Meses/HBoxContainer" instance=ExtResource("3_jyhfs")]
+[node name="+1" parent="UI/Calendario/HBoxContainer/Meses/HBoxContainer" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
+tipo_de_celula = 1
 
 [node name="Dias" type="ScrollContainer" parent="UI/Calendario/HBoxContainer"]
 custom_minimum_size = Vector2(50, 0)

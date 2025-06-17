@@ -1,7 +1,7 @@
 extends VBoxContainer
 
 const UM_DIA_UNIX = 86400 ## 60 segs * 60 mins * 24 hrs = 86400 segs
-const NOME_MESES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]
+
 
 var scroll_timer := 0.0
 var scroll_timerout := 0.3
@@ -15,7 +15,6 @@ var _hA :int ## Tamanho da Linha dos Anos -> 12 x tamanho dos Meses (12 x 5 x 13
 var _hM :int ## Tamanho da Linha dos Meses -> 5 x tamanho dos Dias (5 x 133 px)
 var _hD :int ## Tamanho da Linha dos Dias -> em teste padrao 133 px
 
-@onready var COR_MES = Global.COR_MES
 
 
 func _ready():
@@ -116,7 +115,7 @@ func __preencher_calendario_inicialmente():
 	var dia_1_dict = Time.get_datetime_dict_from_datetime_string(dia_1_string, true)
 	
 	__preencher_nomes_dos_dias_da_semana()
-	__preencher_nome_do_mes( dia_1_dict["month"] - 1) # -1 para corrigir a saida dict [1-Jan 2-Fez ... 12-Dez] -> [0-Jan 1-Fev ... 11-Dez]
+	__preencher_nome_do_mes( dia_1_dict["month"], dia_1_dict["year"]) # -1 para corrigir a saida dict [1-Jan 2-Fez ... 12-Dez] -> [0-Jan 1-Fev ... 11-Dez]
 	__preencher_ano(dia_1_dict["year"])
 	__preencher_dias(dia_1_dict)
 
@@ -177,29 +176,24 @@ func __alterar_dias(avanco:bool) -> void:
 					lista_dias[i].avancar_dias(-7)
 
 
-func __string_ano_formatado(ano:int):
-	var esp = "\n\n\n\n\n" + "\n\n\n\n\n" + "\n\n\n\n\n" + "\n\n\n\n\n"
-	var espacamento = esp + esp + esp + esp + esp
-	var string_ano = "\n\n\n\n".join(str(ano).split(""))
-	return string_ano + espacamento + string_ano + espacamento + string_ano
+
 
 func __preencher_ano(n:int):
 	_ano_ativo = n
-	$"HBoxContainer/Anos/HBoxContainer/-1/Label".text = __string_ano_formatado(n-1)
-	$"HBoxContainer/Anos/HBoxContainer/0/Label".text = __string_ano_formatado(n)
-	$"HBoxContainer/Anos/HBoxContainer/+1/Label".text = __string_ano_formatado(n+1)
+	 # "{0}-01-01 12:00:00".format([ano])
+	$"HBoxContainer/Anos/HBoxContainer/-1".alterar_para_a_data("{0}-01-01 12:00:00".format([n-1]))
+	$"HBoxContainer/Anos/HBoxContainer/0".alterar_para_a_data("{0}-01-01 12:00:00".format([n]))
+	$"HBoxContainer/Anos/HBoxContainer/+1".alterar_para_a_data("{0}-01-01 12:00:00".format([n+1]))
 
 
-func __preencher_nome_do_mes(n:int):
+func __preencher_nome_do_mes(n:int, y):
 	var _mes_anterior = (12 + n - 1) % 12
 	_mes_ativo = (12 + n) % 12
 	var _mes_posterior = (n + 1) % 12
-	$"HBoxContainer/Meses/HBoxContainer/-1/Label".text = "\n".join(str(NOME_MESES[_mes_anterior]).split(""))
-	$"HBoxContainer/Meses/HBoxContainer/-1/ColorRect".color = COR_MES[_mes_anterior]
-	$"HBoxContainer/Meses/HBoxContainer/0/Label".text = "\n".join(str(NOME_MESES[_mes_ativo]).split(""))
-	$"HBoxContainer/Meses/HBoxContainer/0/ColorRect".color = COR_MES[_mes_ativo]
-	$"HBoxContainer/Meses/HBoxContainer/+1/Label".text = "\n".join(str(NOME_MESES[_mes_posterior]).split(""))
-	$"HBoxContainer/Meses/HBoxContainer/+1/ColorRect".color = COR_MES[_mes_posterior]
+	print("{0}-{1}-01 12:00:00".format([y,_mes_ativo]))
+	$"HBoxContainer/Meses/HBoxContainer/-1".alterar_para_a_data("{0}-{1}-01 12:00:00".format([y,_mes_anterior]))
+	$"HBoxContainer/Meses/HBoxContainer/0".alterar_para_a_data("{0}-{1}-01 12:00:00".format([y,_mes_ativo]))
+	$"HBoxContainer/Meses/HBoxContainer/+1".alterar_para_a_data("{0}-{1}-01 12:00:00".format([y,_mes_posterior]))
 
 ## Preenche no Calendario os dias da semana ('Dom', 'Seg', ... , 'Sab')
 func __preencher_nomes_dos_dias_da_semana():
@@ -226,24 +220,6 @@ func __preencher_nomes_dos_dias_da_semana():
 			#return 0  # inválido
 
 
-#func __scroll_sincronizado():
-	#match which_scroll_is_active:
-		#"Anos":
-			#var anos_pos = $HBoxContainer/Anos.scroll_vertical
-			#$HBoxContainer/Meses.scroll_vertical
-			#$HBoxContainer/Dias.scroll_vertical
-		#
-		#"Meses":
-			#var meses_pos = $HBoxContainer/Meses.scroll_vertical
-			#$HBoxContainer/Anos.scroll_vertical# = _h_A * (1 + _mes_ativo + meses_pos % _h_M )
-			#$HBoxContainer/Dias.scroll_vertical = meses_pos
-		#
-		#"Dias":
-			#var dias_pos = $HBoxContainer/Dias.scroll_vertical
-			#$HBoxContainer/Anos.scroll_vertical
-			#$HBoxContainer/Meses.scroll_vertical
-
-
 ## OBS: Qualquer edicao aqui por favor refletir em -> [method __posicionamento_inicial_dos_scrolls()]
 func __efeito_carrossel():
 	# Anos
@@ -257,12 +233,12 @@ func __efeito_carrossel():
 	
 	# Meses
 	var scroll_meses = $HBoxContainer/Meses.scroll_vertical
-	if scroll_meses == 0:
+	if scroll_meses == 0: # voltando
 		__resetar_posicionamento_dos_scrolls("Meses")
-		__preencher_nome_do_mes(_mes_ativo - 1)
+		__preencher_nome_do_mes(_mes_ativo - 1, _ano_ativo) ## TODO caso voltar um mês pro outro ano, os meses Jan e Fev vçao refletir o mês do ano voltado
 	elif scroll_meses >= _hM * 2 - 2:
 		__resetar_posicionamento_dos_scrolls("Meses")
-		__preencher_nome_do_mes(_mes_ativo + 1)
+		__preencher_nome_do_mes(_mes_ativo + 1, _ano_ativo) ## TODO idem ao comentario anterior
 	
 	# Dias
 	var scroll_dias = $HBoxContainer/Dias.scroll_vertical
