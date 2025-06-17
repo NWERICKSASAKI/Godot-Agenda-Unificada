@@ -1,0 +1,68 @@
+[gd_scene load_steps=6 format=3 uid="uid://cak08r8q7glon"]
+
+[ext_resource type="Script" uid="uid://c2xyfxlc6b1s2" path="res://scenes/d.gd" id="1_r8y8y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4oo7s"]
+bg_color = Color(1, 1, 1, 0.784314)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_08duw"]
+bg_color = Color(1, 1, 1, 0.392157)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hvbjc"]
+bg_color = Color(1, 1, 1, 0.588235)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_r8y8y"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[node name="D1" type="Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 3
+anchor_right = 0.039
+anchor_bottom = 0.069
+offset_right = 0.079998
+offset_bottom = 0.319996
+size_flags_horizontal = 3
+size_flags_vertical = 3
+focus_mode = 2
+script = ExtResource("1_r8y8y")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.388235, 0.611765, 0.686275, 1)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -23.0
+offset_top = -14.0
+offset_right = 23.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 20
+text = "17"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxFlat_4oo7s")
+theme_override_styles/hover = SubResource("StyleBoxFlat_08duw")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_hvbjc")
+theme_override_styles/normal = SubResource("StyleBoxFlat_r8y8y")
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

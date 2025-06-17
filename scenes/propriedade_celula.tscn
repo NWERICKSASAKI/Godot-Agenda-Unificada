@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://c0swm8rlv52bx"]
+
+[node name="PropriedadeCelula" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.160784, 0.172549, 0.819608, 0.270588)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Ano" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Button_voltar" type="Button" parent="VBoxContainer/Ano"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "<"
+
+[node name="Label" type="Label" parent="VBoxContainer/Ano"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "17"
+
+[node name="Button_avancar" type="Button" parent="VBoxContainer/Ano"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = ">"
+
+[node name="Mes" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Button" type="Button" parent="VBoxContainer/Mes"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "<"
+
+[node name="Label" type="Label" parent="VBoxContainer/Mes"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "17"
+
+[node name="Button3" type="Button" parent="VBoxContainer/Mes"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = ">"
+
+[node name="Dia" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Button" type="Button" parent="VBoxContainer/Dia"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "<"
+
+[node name="Label" type="Label" parent="VBoxContainer/Dia"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "17"
+
+[node name="Button3" type="Button" parent="VBoxContainer/Dia"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = ">"
