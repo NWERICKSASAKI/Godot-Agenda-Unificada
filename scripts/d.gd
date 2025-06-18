@@ -31,6 +31,17 @@ func _alterar_aparencia():
 		$Label.text = __string_ano_formatado(ano)
 	$ColorRect.color = COR_MES[mes % 12]
 
+func atualizar_data_unix_com_base_nos_atributos():
+	#  year, month, day, hour, minute, and second.
+	var dicionario = {
+		"year":ano,
+		"month":mes,
+		"day":dia,
+		"hour":12
+	}
+	data_unix = Time.get_unix_time_from_datetime_dict(dicionario)
+	alterar_para_a_data(data_unix)
+
 func alterar_para_a_data(nova_data):
 	if nova_data is String: #YYYY-MM-DD HH:MM:SS
 		nova_data = Time.get_unix_time_from_datetime_string(nova_data)
@@ -48,6 +59,12 @@ func avancar_dias(n:int):
 	var avanco_de_dia_em_unix = UM_DIA_UNIX * n
 	var nova_data_unix = data_unix + avanco_de_dia_em_unix
 	alterar_para_a_data(nova_data_unix)
+
+func avancar_meses(n:int):
+	var d_ano = 0
+	d_ano = ( mes + abs(n) ) / 12 * sign(n)
+	mes += n
+	ano += d_ano
 
 func copiar_atributos(obj):
 	data_dicionario = obj.data_dicionario
