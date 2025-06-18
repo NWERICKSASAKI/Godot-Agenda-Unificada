@@ -338,6 +338,7 @@ tipo_de_celula = 1
 [node name="0" parent="UI/Calendario/HBoxContainer/Meses/HBoxContainer" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
 tipo_de_celula = 1
+A = 0.0
 
 [node name="+1" parent="UI/Calendario/HBoxContainer/Meses/HBoxContainer" instance=ExtResource("3_tbgi4")]
 layout_mode = 2

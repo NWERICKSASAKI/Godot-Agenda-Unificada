@@ -195,6 +195,8 @@ func __preencher_nome_do_mes(n:int, y):
 	$"HBoxContainer/Meses/HBoxContainer/0".alterar_para_a_data("{0}-{1}-01 12:00:00".format([y,_mes_ativo]))
 	$"HBoxContainer/Meses/HBoxContainer/+1".alterar_para_a_data("{0}-{1}-01 12:00:00".format([y,_mes_posterior]))
 
+
+
 ## Preenche no Calendario os dias da semana ('Dom', 'Seg', ... , 'Sab')
 func __preencher_nomes_dos_dias_da_semana():
 	var DiaSemana = ["Dom","Seg","Ter","Qua","Qui","Sex","Sab"]

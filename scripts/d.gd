@@ -3,11 +3,9 @@ extends Control
 const UM_DIA_UNIX = 86400 ## 60 * 60 * 24 = 86400
 const UMA_SEMANA_UNIX = UM_DIA_UNIX * 7
 
-
-
 @export_enum("Ano", "Mes", "Semana", "Dia", "Numero da Semana", "Nome da Semana") var tipo_de_celula # 0, 1, 2, 3
 
-var A = 0.5 # alpha / opacidade
+#@export_range(0,1,0.01,"Controle de Opacidade da celula") var A = 0.5 # alpha / opacidade
 
 var data_dicionario
 var data_unix = 0
@@ -60,6 +58,7 @@ func copiar_atributos(obj):
 	ano = obj.ano
 	numero_da_semana = obj.numero_da_semana
 	tipo_de_celula = obj.tipo_de_celula
+	custom_minimum_size = obj.custom_minimum_size
 	if $Button.has_focus():
 		$Button.release_focus()
 	elif obj.get_node("Button").has_focus():
