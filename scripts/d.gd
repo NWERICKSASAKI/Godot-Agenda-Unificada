@@ -35,7 +35,7 @@ func atualizar_data_unix_com_base_nos_atributos():
 	#  year, month, day, hour, minute, and second.
 	var dicionario = {
 		"year":ano,
-		"month":mes,
+		"month":mes+1, # +1 porque em Time os meses começam em 1 - Jan, 2 - Fev ... 12 - Dez
 		"day":dia,
 		"hour":12
 	}
@@ -62,8 +62,12 @@ func avancar_dias(n:int):
 
 func avancar_meses(n:int):
 	var d_ano = ( mes + abs(n) ) / 12 * sign(n)
-	mes = mes + n - 1 
+	mes = mes + n 
 	ano += d_ano
+	atualizar_data_unix_com_base_nos_atributos()
+
+func avancar_anos(n:int):
+	ano += n
 	atualizar_data_unix_com_base_nos_atributos()
 
 func copiar_atributos(obj):

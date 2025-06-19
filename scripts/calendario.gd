@@ -228,10 +228,14 @@ func __efeito_carrossel():
 	var scroll_anos = $HBoxContainer/Anos.scroll_vertical
 	if scroll_anos == 0:
 		__resetar_posicionamento_dos_scrolls("Anos")
-		__preencher_ano(_ano_ativo - 1)
+		$"HBoxContainer/Anos/HBoxContainer/-1".avancar_anos(-1)
+		$"HBoxContainer/Anos/HBoxContainer/0".avancar_anos(-1)
+		$"HBoxContainer/Anos/HBoxContainer/+1".avancar_anos(-1)
 	elif scroll_anos >= _hA * 2 - 2: # Esse último '-2' é porque são 3 meses, logo tem 2 divisões entre eles de 1 pixel cada.
 		__resetar_posicionamento_dos_scrolls("Anos")
-		__preencher_ano(_ano_ativo + 1)
+		$"HBoxContainer/Anos/HBoxContainer/-1".avancar_anos(1)
+		$"HBoxContainer/Anos/HBoxContainer/0".avancar_anos(1)
+		$"HBoxContainer/Anos/HBoxContainer/+1".avancar_anos(1)
 	
 	# Meses
 	var scroll_meses = $HBoxContainer/Meses.scroll_vertical
