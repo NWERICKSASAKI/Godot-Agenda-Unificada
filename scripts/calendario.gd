@@ -236,11 +236,17 @@ func __efeito_carrossel():
 	# Meses
 	var scroll_meses = $HBoxContainer/Meses.scroll_vertical
 	if scroll_meses == 0: # voltando
+		_mes_ativo -= 1
 		__resetar_posicionamento_dos_scrolls("Meses")
-		__preencher_nome_do_mes(_mes_ativo - 1, _ano_ativo) ## TODO caso voltar um mês pro outro ano, os meses Jan e Fev vçao refletir o mês do ano voltado
+		$"HBoxContainer/Meses/HBoxContainer/-1".avancar_meses(-1)
+		$"HBoxContainer/Meses/HBoxContainer/0".avancar_meses(-1)
+		$"HBoxContainer/Meses/HBoxContainer/+1".avancar_meses(-1)
 	elif scroll_meses >= _hM * 2 - 2:
+		_mes_ativo += 1
 		__resetar_posicionamento_dos_scrolls("Meses")
-		__preencher_nome_do_mes(_mes_ativo + 1, _ano_ativo) ## TODO idem ao comentario anterior
+		$"HBoxContainer/Meses/HBoxContainer/-1".avancar_meses(1)
+		$"HBoxContainer/Meses/HBoxContainer/0".avancar_meses(1)
+		$"HBoxContainer/Meses/HBoxContainer/+1".avancar_meses(1)
 	
 	# Dias
 	var scroll_dias = $HBoxContainer/Dias.scroll_vertical

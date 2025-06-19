@@ -61,10 +61,10 @@ func avancar_dias(n:int):
 	alterar_para_a_data(nova_data_unix)
 
 func avancar_meses(n:int):
-	var d_ano = 0
-	d_ano = ( mes + abs(n) ) / 12 * sign(n)
-	mes += n
+	var d_ano = ( mes + abs(n) ) / 12 * sign(n)
+	mes = mes + n - 1 
 	ano += d_ano
+	atualizar_data_unix_com_base_nos_atributos()
 
 func copiar_atributos(obj):
 	data_dicionario = obj.data_dicionario
