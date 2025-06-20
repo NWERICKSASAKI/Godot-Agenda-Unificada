@@ -86,7 +86,10 @@ func copiar_atributos(obj):
 		$Button.grab_focus()
 	_alterar_aparencia()
 
-func calcular_numero_da_semana(data_em_unix):
+## A partir da data unix, retorna o número da semana.
+## Convencionalmente, a semana vai de Seg -> Dom
+## ao invés de Dom -> Sab
+func calcular_numero_da_semana(data_em_unix) -> int:
 	var data_string_1o_dia_do_ano = "{0}-01-01 12:00:00".format([ano]) #YYYY-MM-DD HH:MM:SS
 	var unix_data = Time.get_unix_time_from_datetime_string(data_string_1o_dia_do_ano)
 	var dict_data = Time.get_datetime_dict_from_datetime_string(data_string_1o_dia_do_ano, true)
@@ -96,8 +99,8 @@ func calcular_numero_da_semana(data_em_unix):
 	var num_da_semana = ( data_em_unix - unix_prox_domingo ) / UMA_SEMANA_UNIX
 	return num_da_semana
 
-
-func qtd_semanas_no_mes(_ano=ano,_mes=mes):
+## Retorna quantas semanas o mês/ano possui.
+func qtd_semanas_no_mes(_mes=mes,_ano=ano) -> int:
 	var unix_1o_dia_do_mes =  "{0}-{1}-01 12:00:00".format([_ano,_mes]) #YYYY-MM-DD HH:MM:SS
 	var num_semana_1o_dia = calcular_numero_da_semana(unix_1o_dia_do_mes)
 	
@@ -115,6 +118,7 @@ func __string_ano_formatado(ano:int):
 	var string_ano = "\n\n\n\n".join(str(ano).split(""))
 	return string_ano + espacamento + string_ano + espacamento + string_ano
 
+## Função ao apertar/clicar/tocar a célula do Dia, Mês, Semana ou Ano.
 func _on_button_pressed() -> void:
 	print("tipo: ",tipo_de_celula, " data:", dia, "/", mes, "/", ano)
 	

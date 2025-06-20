@@ -7,9 +7,9 @@ var scroll_timer := 0.0
 var scroll_timerout := 0.3
 var which_scroll_is_active := "" ## Qual dos scrolls esta ativos: 'Anos', 'Meses ou 'Dias'
 
-var _ano_ativo :int
-var _mes_ativo :int ## Mês em foco no calendário -> 0 Jan, 1 Fev, ... , 11 Dez
-var _dia_ativo :int
+var _ano_ativo :int ## Ano em foco/selecionado no calendário
+var _mes_ativo :int ## Mês em foco/selecionado no calendário -> 0 Jan, 1 Fev, ... , 11 Dez
+var _dia_ativo :int ## Dia em foco/selecionado no calendário
 
 var _hA :int ## Tamanho da Linha dos Anos -> 12 x tamanho dos Meses (12 x 5 x 133 px)
 var _hM :int ## Tamanho da Linha dos Meses -> 5 x tamanho dos Dias (5 x 133 px)
@@ -119,7 +119,8 @@ func __preencher_calendario_inicialmente():
 	__preencher_ano(dia_1_dict["year"])
 	__preencher_dias(dia_1_dict)
 
-## Preenche as células (de dias) do calendário. Insere-se a data da primeira semana a ser exibida para completar as demais células 
+## Preenche as células (de dias) do calendário.
+## Insere-se a data da primeira semana a ser exibida para completar as demais células 
 func __preencher_dias(data_primeira_semana:Dictionary):
 	var hoje_unix = Time.get_unix_time_from_datetime_dict(data_primeira_semana) ## Data (em unix) da primeira semana do mês
 	var dia_semana = data_primeira_semana["weekday"] ## Número do dia da semana -> 0 Domingo, 1 Segunda, ... 6 Sabado
@@ -136,18 +137,22 @@ func __preencher_dias(data_primeira_semana:Dictionary):
 			if not dia.name == "S":
 				num_dia += UM_DIA_UNIX
 
+## Ao invés de aplicar avancar_dias(n) em cada uma das células,
+## esta função poupa processamento copiando as células centrais em deslocamento
 func __alterar_dias(avanco:bool) -> void:
-	var lista_semana = $HBoxContainer/Dias/VBoxContainer.get_children() ## [ S0 , S1 , ... , S5 , S6 ]
+	var lista_semana = $HBoxContainer/Dias/VBoxContainer.get_children() ## l = [ S0 , S1 , ... , S5 , S6 ]
+	var semana_atual ## um dos elementos -> [ S0 , S1 , ... , S6 ] 
+	var lista_dias ## l = [S, D1, ... , D7]
 	
 	# avançar dias no calendario / descer 
 	if avanco:
 		for s in lista_semana.size(): ## [S0,S1,...S6].size() = 7
-			var semana_atual = lista_semana[s] ## um dos elementos -> [ S0 , S1 , ... , S6 ] 
-			var lista_dias = semana_atual.get_children() ## [S, D1, ... , D7] de umas das Semanas S0 a S6
+			semana_atual = lista_semana[s] ## um dos elementos -> [ S0 , S1 , ... , S6 ] 
+			lista_dias = semana_atual.get_children() ## [S, D1, ... , D7] de umas das Semanas S0 a S6
 			
 			var lista_dias_semana_seguinte := [] ## [S, D1, ... , D7] da semana seguinte
 			if s < 6:
-				var semana_seguinte = lista_semana[s+1] # prox semana
+				var semana_seguinte = lista_semana[s+1] ## prox semana -> [ S1 , ... , S6 ] 
 				lista_dias_semana_seguinte = semana_seguinte.get_children()
 				#lista_dias_semana_seguinte.pop_front()
 			
@@ -160,13 +165,13 @@ func __alterar_dias(avanco:bool) -> void:
 	# voltar dias no calendario / subir
 	else: 
 		for s in lista_semana.size(): ## [S0,S1,...S6].size() = 7
-			var semana_atual = lista_semana[6-s]
-			var lista_dias = semana_atual.get_children() ## [S, D1, ... , D7]
+			semana_atual = lista_semana[6-s] 
+			lista_dias = semana_atual.get_children()
 			#lista_dias.pop_front()
 			
 			var lista_dias_semana_anterior := []
 			if 6-s > 0:
-				var semana_anterior = lista_semana[6-s-1] # semana anterior
+				var semana_anterior = lista_semana[6-s-1] ## semana anterior -> [ S0 , S1 , ... , S5 ] 
 				lista_dias_semana_anterior = semana_anterior.get_children()
 				#lista_dias_semana_anterior.pop_front()
 			for i in lista_dias.size():
@@ -177,7 +182,7 @@ func __alterar_dias(avanco:bool) -> void:
 
 
 
-
+## Preenche as células dos Anos do calendário com base no ano inserido
 func __preencher_ano(n:int):
 	_ano_ativo = n
 	 # "{0}-01-01 12:00:00".format([ano])
@@ -185,11 +190,11 @@ func __preencher_ano(n:int):
 	$"HBoxContainer/Anos/HBoxContainer/0".alterar_para_a_data("{0}-01-01 12:00:00".format([n]))
 	$"HBoxContainer/Anos/HBoxContainer/+1".alterar_para_a_data("{0}-01-01 12:00:00".format([n+1]))
 
-
-func __preencher_nome_do_mes(n:int, y):
-	var _mes_anterior = (12 + n - 1) % 12
-	_mes_ativo = (12 + n) % 12
-	var _mes_posterior = (n + 1) % 12
+## Preenche as células dos Meses do calendário com base no mês inserido (e ano)
+func __preencher_nome_do_mes(m:int, y:int):
+	var _mes_anterior = (12 + m - 1) % 12
+	_mes_ativo = (12 + m) % 12
+	var _mes_posterior = (m + 1) % 12
 	print("{0}-{1}-01 12:00:00".format([y,_mes_ativo]))
 	$"HBoxContainer/Meses/HBoxContainer/-1".alterar_para_a_data("{0}-{1}-01 12:00:00".format([y,_mes_anterior]))
 	$"HBoxContainer/Meses/HBoxContainer/0".alterar_para_a_data("{0}-{1}-01 12:00:00".format([y,_mes_ativo]))
@@ -261,7 +266,9 @@ func __efeito_carrossel():
 		__resetar_posicionamento_dos_scrolls("Dias")
 		__alterar_dias(true)
 
-
+## Usado no _process(), desliga o _process() caso 
+## detectado inatividade no scroll do calendário
+## para evitar processamento do efeito carrossel e etc.
 func __verificacao_inatividade_scrollactive(delta):
 	scroll_timer -= delta
 	if scroll_timer <= 0:
