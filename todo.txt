@@ -1,9 +1,12 @@
 [?] Alterar os indicadores de 'Dia da Semana' para o Node Padrão
 [?] Centralizar o código do 'Dia da Semana' ao Node
 [ ] Ajuste automático da altura dos "Meses" com base no número de semanas
+[ ] Ajuste automático da altura dos "Anos" com base no número de semanas
 [ ] Sincronizar rolagem: Anos - Meses - Dias
 [ ] Fazer a estrutura de dados
 [ ] Estruturar layout para inserção de dados
 [ ] Salvar dados inseridos localmente
 [ ] Carregar dados locais
 [ ] Ilustrar dados associados aos Dias
+[ ] Salvar dados externamente à memória local do app
+[ ] Sincronizar dados com Google Drive

@@ -89,7 +89,7 @@ func copiar_atributos(obj):
 ## A partir da data unix, retorna o número da semana.
 ## Convencionalmente, a semana vai de Seg -> Dom
 ## ao invés de Dom -> Sab
-func calcular_numero_da_semana(data_em_unix) -> int:
+func calcular_numero_da_semana(data_em_unix:int) -> int:
 	var data_string_1o_dia_do_ano = "{0}-01-01 12:00:00".format([ano]) #YYYY-MM-DD HH:MM:SS
 	var unix_data = Time.get_unix_time_from_datetime_string(data_string_1o_dia_do_ano)
 	var dict_data = Time.get_datetime_dict_from_datetime_string(data_string_1o_dia_do_ano, true)
@@ -99,18 +99,39 @@ func calcular_numero_da_semana(data_em_unix) -> int:
 	var num_da_semana = ( data_em_unix - unix_prox_domingo ) / UMA_SEMANA_UNIX
 	return num_da_semana
 
-## Retorna quantas semanas o mês/ano possui.
+## Retorna a quantidade de semanas que o mês possui.
+## Função usada para determinar a altura das células dos Meses.
 func qtd_semanas_no_mes(_mes=mes,_ano=ano) -> int:
-	var unix_1o_dia_do_mes =  "{0}-{1}-01 12:00:00".format([_ano,_mes]) #YYYY-MM-DD HH:MM:SS
+	var string_1o_dia_do_mes =  "{0}-{1}-01 12:00:00".format([_ano,_mes]) #YYYY-MM-DD HH:MM:SS
+	var unix_1o_dia_do_mes =  Time.get_unix_time_from_datetime_string(string_1o_dia_do_mes)
 	var num_semana_1o_dia = calcular_numero_da_semana(unix_1o_dia_do_mes)
 	
-	var unix_1o_dia_do_prox_mes =  "{0}-{1}-01 12:00:00".format([_ano,_mes+1]) #YYYY-MM-DD HH:MM:SS
+	var prox_mes = (_mes+1)%12 # Caso o mês (atual) seja 11 (dez) retona para 0 (jan).
+	if prox_mes == 0:
+		_ano += 1
+	
+	var string_1o_dia_do_prox_mes =  "{0}-{1}-01 12:00:00".format([_ano,_mes+1]) #YYYY-MM-DD HH:MM:SS
+	var unix_1o_dia_do_prox_mes =  Time.get_unix_time_from_datetime_string(string_1o_dia_do_prox_mes)
 	var unix_ultimo_dia_do_mes = unix_1o_dia_do_prox_mes - UM_DIA_UNIX
 	var num_semana_ultimo_dia = calcular_numero_da_semana(unix_ultimo_dia_do_mes)
 	
 	var num_de_semanas_no_mes = num_semana_ultimo_dia - num_semana_1o_dia
 	return num_de_semanas_no_mes
 
+## Retorna a quantidade de semanas que o ano possui.
+## Função usada para determinar a altura das células dos Anos.
+func qtd_semanas_no_ano(_ano=ano) -> int:
+	var string_1o_dia_do_ano =  "{0}-{1}-01 12:00:00".format([_ano]) #YYYY-MM-DD HH:MM:SS
+	var unix_1o_dia_do_ano =  Time.get_datetime_string_from_unix_time(string_1o_dia_do_ano)
+	var num_semana_1o_dia = calcular_numero_da_semana(unix_1o_dia_do_ano)
+	
+	var string_1o_dia_do_prox_ano =  "{0}-01-01 12:00:00".format([_ano+1]) #YYYY-MM-DD HH:MM:SS
+	var unix_1o_dia_do_prox_ano =  Time.get_datetime_string_from_unix_time(string_1o_dia_do_prox_ano)
+	var unix_ultimo_dia_do_ano = unix_1o_dia_do_prox_ano - UM_DIA_UNIX
+	var num_semana_ultimo_dia = calcular_numero_da_semana(unix_ultimo_dia_do_ano)
+	
+	var num_de_semanas_no_ano = num_semana_ultimo_dia - num_semana_1o_dia
+	return num_de_semanas_no_ano
 
 func __string_ano_formatado(ano:int):
 	var esp = "\n\n\n\n\n" + "\n\n\n\n\n" + "\n\n\n\n\n" + "\n\n\n\n\n"
@@ -121,4 +142,6 @@ func __string_ano_formatado(ano:int):
 ## Função ao apertar/clicar/tocar a célula do Dia, Mês, Semana ou Ano.
 func _on_button_pressed() -> void:
 	print("tipo: ",tipo_de_celula, " data:", dia, "/", mes, "/", ano)
+	if tipo_de_celula == 1:
+		print(qtd_semanas_no_mes(mes,ano))
 	
