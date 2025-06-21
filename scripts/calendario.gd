@@ -205,11 +205,10 @@ func __preencher_nome_do_mes(m:int, y:int):
 ## Preenche no Calendario os dias da semana ('Dom', 'Seg', ... , 'Sab')
 func __preencher_nomes_dos_dias_da_semana():
 	var DiaSemana = ["Dom","Seg","Ter","Qua","Qui","Sex","Sab"]
-	var nodes_DiasDaSemana = $DiaDaSemana.get_children() ## [ N1 , N2 , S , D1 , ... , D7 ]
 	for i in DiaSemana.size():
 		var dia = DiaSemana[i]
 		var node_name = "D{0}".format([i+1])
-		$DiaDaSemana.get_node(node_name).get_node("Label").text = DiaSemana[i]
+		$DiaDaSemana.get_node(node_name).get_node("Label").text = dia
 
 
 #func eh_ano_bissexto(ano: int) -> bool:

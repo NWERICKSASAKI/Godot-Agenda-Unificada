@@ -366,7 +366,7 @@ theme = SubResource("Theme_sugp2")
 [node name="S" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S0" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
 size_flags_horizontal = 1
-tipo_de_celula = 4
+tipo_de_celula = 2
 
 [node name="D1" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S0" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
@@ -405,7 +405,7 @@ theme = SubResource("Theme_sugp2")
 [node name="S" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S1" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
 size_flags_horizontal = 1
-tipo_de_celula = 4
+tipo_de_celula = 2
 
 [node name="D1" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S1" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
@@ -444,7 +444,7 @@ theme = SubResource("Theme_sugp2")
 [node name="S" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S2" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
 size_flags_horizontal = 1
-tipo_de_celula = 4
+tipo_de_celula = 2
 
 [node name="D1" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S2" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
@@ -483,7 +483,7 @@ theme = SubResource("Theme_sugp2")
 [node name="S" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S3" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
 size_flags_horizontal = 1
-tipo_de_celula = 4
+tipo_de_celula = 2
 
 [node name="D1" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S3" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
@@ -522,7 +522,7 @@ theme = SubResource("Theme_sugp2")
 [node name="S" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S4" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
 size_flags_horizontal = 1
-tipo_de_celula = 4
+tipo_de_celula = 2
 
 [node name="D1" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S4" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
@@ -561,7 +561,7 @@ theme = SubResource("Theme_sugp2")
 [node name="S" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S5" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
 size_flags_horizontal = 1
-tipo_de_celula = 4
+tipo_de_celula = 2
 
 [node name="D1" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S5" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
@@ -601,7 +601,7 @@ theme = SubResource("Theme_sugp2")
 [node name="S" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S6" instance=ExtResource("3_tbgi4")]
 layout_mode = 2
 size_flags_horizontal = 1
-tipo_de_celula = 4
+tipo_de_celula = 2
 
 [node name="D1" parent="UI/Calendario/HBoxContainer/Dias/VBoxContainer/S6" instance=ExtResource("3_tbgi4")]
 layout_mode = 2

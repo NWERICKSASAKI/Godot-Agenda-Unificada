@@ -3,15 +3,15 @@ extends Control
 const UM_DIA_UNIX = 86400 ## 60 * 60 * 24 = 86400
 const UMA_SEMANA_UNIX = UM_DIA_UNIX * 7
 
-@export_enum("Ano", "Mes", "Semana", "Dia", "Numero da Semana", "Nome da Semana") var tipo_de_celula # 0, 1, 2, 3
+@export_enum("Ano", "Mes", "Semana", "Dia", "Nome da Semana") var tipo_de_celula # 0, 1, 2, 3
 
 #@export_range(0,1,0.01,"Controle de Opacidade da celula") var A = 0.5 # alpha / opacidade
 
-var data_dicionario
-var data_unix = 0
+var data_dicionario:Dictionary
+var data_unix:int = 0
 var ano:int
 var dia:int
-var mes:int ## 0 = Janeiro,[br]1 = Fevereiro[br]...[br]11 = Dezembro
+var mes:int ## 0 = Janeiro,[br]1 = Fevereiro,[br]...[br]11 = Dezembro
 var dia_da_semana:int ## 0 = Domingo,[br]1 = Segunda,[br]...[br]6 = Sábado
 var numero_da_semana:int
 
@@ -23,15 +23,16 @@ func _ready():#
 
 func _alterar_aparencia():
 	$Label.text = str(dia)
-	if tipo_de_celula == 4:
+	if tipo_de_celula == 2:
 		$Label.text = "S" + str(numero_da_semana)
 	elif tipo_de_celula == 1:
 		$Label.text = "\n".join(str(NOME_MESES[mes]).split(""))
 	elif tipo_de_celula == 0:
-		$Label.text = __string_ano_formatado(ano)
+		$Label.text = __string_ano_formatado()
 	$ColorRect.color = COR_MES[mes % 12]
 
 func atualizar_data_unix_com_base_nos_atributos():
+	assert( mes >= 0, "'mes' precisa ser maior ou igual que 0. mes -> {0}".format([mes]));
 	#  year, month, day, hour, minute, and second.
 	var dicionario = {
 		"year":ano,
@@ -49,10 +50,10 @@ func alterar_para_a_data(nova_data):
 	data_dicionario = Time.get_datetime_dict_from_unix_time(data_unix)
 	dia_da_semana = data_dicionario['weekday']
 	dia = data_dicionario["day"]
-	mes = data_dicionario["month"]-1
+	mes = data_dicionario["month"]-1 #  Dicio (mês) = { 1-Jan, 2-Fev, ... 12-Dez  } -1 para ao meu modelo
 	ano = data_dicionario["year"]
 	numero_da_semana = calcular_numero_da_semana(data_unix)
-	tipo_de_celula
+	#tipo_de_celula
 	_alterar_aparencia()
 
 func avancar_dias(n:int):
@@ -62,7 +63,7 @@ func avancar_dias(n:int):
 
 func avancar_meses(n:int):
 	var d_ano = ( mes + abs(n) ) / 12 * sign(n)
-	mes = mes + n 
+	mes = (mes+12 + n)%12 # +12 para evitar que mes = -1
 	ano += d_ano
 	atualizar_data_unix_com_base_nos_atributos()
 
@@ -91,18 +92,23 @@ func copiar_atributos(obj):
 ## ao invés de Dom -> Sab
 func calcular_numero_da_semana(data_em_unix:int) -> int:
 	var data_string_1o_dia_do_ano = "{0}-01-01 12:00:00".format([ano]) #YYYY-MM-DD HH:MM:SS
-	var unix_data = Time.get_unix_time_from_datetime_string(data_string_1o_dia_do_ano)
-	var dict_data = Time.get_datetime_dict_from_datetime_string(data_string_1o_dia_do_ano, true)
-	var dia_da_semama = int(dict_data['weekday']) # 0 Domindo, 1 Seg, ... , 6 Sábado
-	var unix_prox_domingo = unix_data - (7 - dia_da_semama) * UM_DIA_UNIX
-	
-	var num_da_semana = ( data_em_unix - unix_prox_domingo ) / UMA_SEMANA_UNIX
+	var unix_data_1o_dia_do_ano = Time.get_unix_time_from_datetime_string(data_string_1o_dia_do_ano)
+	var dict_data_1o_dia_do_ano = Time.get_datetime_dict_from_datetime_string(data_string_1o_dia_do_ano, true)
+	var dia_da_semama_1o_dia_do_ano = int(dict_data_1o_dia_do_ano['weekday']) ## 0 Domindo, 1 Seg, ... , 6 Sábado
+	#var unix_anterior_domingo = unix_data_1o_dia_do_ano - (7 - dia_da_semama_1o_dia_do_ano) * UM_DIA_UNIX
+	var unix_segunda_anterior = unix_data_1o_dia_do_ano - (dia_da_semama_1o_dia_do_ano - 1) * UM_DIA_UNIX
+	@warning_ignore("integer_division")
+	#var num_da_semana = ( data_em_unix - unix_anterior_domingo ) / UMA_SEMANA_UNIX
+	var num_da_semana = ( data_em_unix - unix_segunda_anterior ) / UMA_SEMANA_UNIX + 1 # +1 pq a numeração das semanas começa em 1.
 	return num_da_semana
 
 ## Retorna a quantidade de semanas que o mês possui.
 ## Função usada para determinar a altura das células dos Meses.
-func qtd_semanas_no_mes(_mes=mes,_ano=ano) -> int:
+func qtd_semanas_no_mes(_mes=mes,_ano=ano) -> Array:
+	_mes += 1 # para adaptar ao unix 
 	var string_1o_dia_do_mes =  "{0}-{1}-01 12:00:00".format([_ano,_mes]) #YYYY-MM-DD HH:MM:SS
+	var dict_1o_dia_do_mes = Time.get_datetime_dict_from_datetime_string(string_1o_dia_do_mes,true)
+	var domingo_1o_dia:bool = dict_1o_dia_do_mes['weekday']==0
 	var unix_1o_dia_do_mes =  Time.get_unix_time_from_datetime_string(string_1o_dia_do_mes)
 	var num_semana_1o_dia = calcular_numero_da_semana(unix_1o_dia_do_mes)
 	
@@ -110,13 +116,20 @@ func qtd_semanas_no_mes(_mes=mes,_ano=ano) -> int:
 	if prox_mes == 0:
 		_ano += 1
 	
-	var string_1o_dia_do_prox_mes =  "{0}-{1}-01 12:00:00".format([_ano,_mes+1]) #YYYY-MM-DD HH:MM:SS
+	var string_1o_dia_do_prox_mes =  "{0}-{1}-01 12:00:00".format([_ano,prox_mes]) #YYYY-MM-DD HH:MM:SS
 	var unix_1o_dia_do_prox_mes =  Time.get_unix_time_from_datetime_string(string_1o_dia_do_prox_mes)
 	var unix_ultimo_dia_do_mes = unix_1o_dia_do_prox_mes - UM_DIA_UNIX
+
+	var dict_ult_dia_do_mes = Time.get_datetime_dict_from_unix_time(unix_ultimo_dia_do_mes)
+	var sabado_ult_dia:bool = dict_ult_dia_do_mes['weekday']==6
+
 	var num_semana_ultimo_dia = calcular_numero_da_semana(unix_ultimo_dia_do_mes)
 	
-	var num_de_semanas_no_mes = num_semana_ultimo_dia - num_semana_1o_dia
-	return num_de_semanas_no_mes
+	var num_de_semanas_no_mes = num_semana_ultimo_dia - num_semana_1o_dia + 1
+	#var num_de_semanas_no_mes = ceil((float(unix_ultimo_dia_do_mes - unix_1o_dia_do_mes)/UMA_SEMANA_UNIX))
+	
+	var lista = [num_de_semanas_no_mes, domingo_1o_dia, sabado_ult_dia]
+	return lista
 
 ## Retorna a quantidade de semanas que o ano possui.
 ## Função usada para determinar a altura das células dos Anos.
@@ -133,7 +146,7 @@ func qtd_semanas_no_ano(_ano=ano) -> int:
 	var num_de_semanas_no_ano = num_semana_ultimo_dia - num_semana_1o_dia
 	return num_de_semanas_no_ano
 
-func __string_ano_formatado(ano:int):
+func __string_ano_formatado() -> String:
 	var esp = "\n\n\n\n\n" + "\n\n\n\n\n" + "\n\n\n\n\n" + "\n\n\n\n\n"
 	var espacamento = esp + esp + esp + esp + esp
 	var string_ano = "\n\n\n\n".join(str(ano).split(""))
@@ -142,6 +155,8 @@ func __string_ano_formatado(ano:int):
 ## Função ao apertar/clicar/tocar a célula do Dia, Mês, Semana ou Ano.
 func _on_button_pressed() -> void:
 	print("tipo: ",tipo_de_celula, " data:", dia, "/", mes, "/", ano)
-	if tipo_de_celula == 1:
+	if tipo_de_celula == 1: # month
 		print(qtd_semanas_no_mes(mes,ano))
+	elif tipo_de_celula == 3: # dia
+		print(calcular_numero_da_semana(data_unix))
 	
