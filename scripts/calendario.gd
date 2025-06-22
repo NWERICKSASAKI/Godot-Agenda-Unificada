@@ -97,7 +97,9 @@ func __resetar_posicionamento_dos_scrolls(scroll_name:String=""):
 	if scroll_name == 'Dias' or scroll_name=="":
 		$HBoxContainer/Dias.scroll_vertical = _hD + 1 # +1 para evitar ficar com borda grossa devido ao separador dos dias da semana com a semana anterior
 	if scroll_name == 'Meses' or scroll_name=="":
-		$HBoxContainer/Meses.scroll_vertical = _hM - 1
+		$HBoxContainer/Meses.scroll_vertical =  _hM - 1
+		#print("$HBoxContainer/Meses.size =",$HBoxContainer/Meses.size)
+		#print("$HBoxContainer/Meses.scroll_vertical =",$HBoxContainer/Meses.scroll_vertical)
 	if scroll_name == 'Anos' or scroll_name=="":
 		$HBoxContainer/Anos.scroll_vertical = _hA * (1 + float(_mes_ativo)/12)
 
@@ -180,7 +182,24 @@ func __alterar_dias(avanco:bool) -> void:
 				else:
 					lista_dias[i].avancar_dias(-7)
 
-
+## Altera e atualiza a altura dos meses
+func __alterar_altura_meses():
+	#_hM = $"HBoxContainer/Meses/HBoxContainer/0".size[1]
+	var lista_alturas = []
+	for mes_node in $HBoxContainer/Meses/HBoxContainer.get_children():
+		var qtd_semana = mes_node.qtd_semanas_no_mes(mes_node.mes, mes_node.ano)
+		var tamanho = _hM * qtd_semana[0]
+		mes_node.size[1] = tamanho
+		var v2 = Vector2(mes_node.size[0],tamanho)
+		mes_node.set("size",v2)
+		lista_alturas.append(tamanho)
+		print(mes_node.size[1])
+	var larg = $HBoxContainer/Meses/HBoxContainer.size[0]
+	var altura_total = lista_alturas.reduce(func(accum, number): return accum + number, 0)
+	#$HBoxContainer/Meses/HBoxContainer.size[1] = altura_total
+	$HBoxContainer/Meses/HBoxContainer.set("size", Vector2(larg, altura_total))
+	#$HBoxContainer/Meses.size[1] = altura_total
+	$HBoxContainer/Meses.set("size", Vector2(larg, altura_total))
 
 ## Preenche as células dos Anos do calendário com base no ano inserido
 func __preencher_ano(n:int):
@@ -243,18 +262,23 @@ func __efeito_carrossel():
 	
 	# Meses
 	var scroll_meses = $HBoxContainer/Meses.scroll_vertical
-	if scroll_meses == 0: # voltando
+	if scroll_meses == 0: # voltando TODO evitar de alguem jeito de comparar com ZERO
 		_mes_ativo -= 1
-		__resetar_posicionamento_dos_scrolls("Meses")
 		$"HBoxContainer/Meses/HBoxContainer/-1".avancar_meses(-1)
 		$"HBoxContainer/Meses/HBoxContainer/0".avancar_meses(-1)
 		$"HBoxContainer/Meses/HBoxContainer/+1".avancar_meses(-1)
+		#__alterar_altura_meses()
+		#await get_tree().process_frame
+		__resetar_posicionamento_dos_scrolls("Meses")
+		print("scroll_meses = ",$HBoxContainer/Meses.scroll_vertical)
 	elif scroll_meses >= _hM * 2 - 2:
 		_mes_ativo += 1
-		__resetar_posicionamento_dos_scrolls("Meses")
 		$"HBoxContainer/Meses/HBoxContainer/-1".avancar_meses(1)
 		$"HBoxContainer/Meses/HBoxContainer/0".avancar_meses(1)
 		$"HBoxContainer/Meses/HBoxContainer/+1".avancar_meses(1)
+		#__alterar_altura_meses()
+		#await get_tree().process_frame
+		__resetar_posicionamento_dos_scrolls("Meses")
 	
 	# Dias
 	var scroll_dias = $HBoxContainer/Dias.scroll_vertical
@@ -264,6 +288,8 @@ func __efeito_carrossel():
 	elif scroll_dias >= _hD * 2 - 1: #268 # certificar que vai do S0 ao S6
 		__resetar_posicionamento_dos_scrolls("Dias")
 		__alterar_dias(true)
+	
+	await get_tree().process_frame  # Espera um frame para layout aplicar
 
 ## Usado no _process(), desliga o _process() caso 
 ## detectado inatividade no scroll do calendário
